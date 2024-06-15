@@ -2,22 +2,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#99d7ff"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SurveilTech"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <TextView
         android:id="@+id/textViewIPAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="IP Address"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
         android:padding="16dp"
-        android:textSize="18sp" />
+         />
 
     <TextView
         android:id="@+id/textViewScanResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Scan Results"
-        android:padding="16dp"
-        android:textSize="18sp" />
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 </LinearLayout>

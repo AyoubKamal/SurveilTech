@@ -1,8 +1,18 @@
 package com.example.surveiltechproject
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ImageSpan
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.FileReader
@@ -28,9 +38,42 @@ class MainActivity : AppCompatActivity() {
         if (ipAddress != "IP address not found") {
             CoroutineScope(Dispatchers.Main).launch {
                 val scanResults = withContext(Dispatchers.IO) { scanNetwork(ipAddress) }
-                textViewScanResults.text = scanResults.joinToString("\n")
+                setClickableText(textViewScanResults, extractIPAddress(scanResults))
             }
         }
+    }
+
+    private fun extractIPAddress(scanResults: List<String>): List<String> {
+        val ipAddresses = mutableListOf<String>()
+        val ipRegex = Regex("IP: (\\d+\\.\\d+\\.\\d+\\.\\d+)")
+        for (result in scanResults) {
+            val matchResult = ipRegex.find(result)
+            if (matchResult != null) {
+                val ipAddress = matchResult.groupValues[1]
+                ipAddresses.add(ipAddress)
+            }
+        }
+        return ipAddresses
+    }
+    private fun setClickableText(textView: TextView, scanResults: List<String>) {
+        val spannableString = SpannableStringBuilder()
+        val lines = scanResults
+
+        for (line in lines) {
+            val spannableLine = SpannableString("$line\n")
+            spannableLine.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    val intent = Intent(this@MainActivity, AffichageAppareil::class.java)
+                    intent.putExtra("ipAddress", line)
+                    startActivity(intent)
+                }
+            }, 0, spannableLine.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            spannableString.append(spannableLine)
+        }
+
+        textView.text = spannableString
+        textView.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun getDeviceIPAddress(): String {
